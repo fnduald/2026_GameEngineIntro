@@ -1,14 +1,17 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
+    
     private Vector2 moveInput;
     public float moveSpeed = 7f;
     public float jumpForce = 7f;
     private Rigidbody2D rb;
     private Animator myAnimator;
-
+   
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -53,5 +56,21 @@ public class PlayerController : MonoBehaviour
 
         // 실제 이동 처리
         transform.Translate(Vector3.right * moveSpeed * moveInput.x * Time.deltaTime);
+   
     }
+  
+        private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.name == "Death")
+        {
+            // "Death"라는 이름의 오브젝트와 부딪히면 현재 씬을 다시 로드합니다.
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+        else
+        {
+            // 그 외의 경우 "PlayScene_" 뒤에 부딪힌 오브젝트의 이름을 붙여 씬을 이동합니다.
+            SceneManager.LoadScene("PlayScene_" + collision.name);
+        }
+    }
+
 }
